@@ -7,28 +7,33 @@
 // import SellerCenter from "./pages/sellercenter/SellerCenter";
 // import Marketing from "./pages/Marketing/Marketing";
 
-// function App() {
-//   const isAuthenticated = true; // Adjust based on actual authentication logic
+// // Replace this with your actual authentication logic
+// const isAuthenticated = () => {
+//   const token = localStorage.getItem("token");
+//   console.log("Token exists:", token);
+//   return token !== null;
+// };
 
+// // PrivateRoute component to protect routes
+// const PrivateRoute = ({ element }) => {
+//   return isAuthenticated() ? element : <Navigate to="/login" />;
+// };
+
+// function App() {
 //   return (
 //     <Routes>
 //       <Route path="/login" element={<Login />} />
 //       <Route path="/signup" element={<Signup />} />
 
-//       {/* DashboardLayout as the layout for protected routes */}
-//       <Route
-//         path="/"
-//         element={
-//           isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-//         }
-//       >
+//       {/* Protected routes with DashboardLayout */}
+//       <Route path="/" element={<PrivateRoute element={<DashboardLayout />} />}>
 //         <Route index element={<Home />} />
-//         <Route path="home" element={<Home />} />
 //         <Route path="createstore" element={<CreateStore />} />
 //         <Route path="sellercenter" element={<SellerCenter />} />
 //         <Route path="marketing" element={<Marketing />} />
 //       </Route>
 
+//       {/* Redirect all unknown routes to login */}
 //       <Route path="*" element={<Navigate to="/login" />} />
 //     </Routes>
 //   );
@@ -46,23 +51,32 @@ import Marketing from "./pages/Marketing/Marketing";
 
 // Replace this with your actual authentication logic
 const isAuthenticated = () => {
-  // Example: check if a valid token exists
-  return localStorage.getItem("token") !== null;
+  const token = localStorage.getItem("token");
+
+  return token !== null;
 };
 
 // PrivateRoute component to protect routes
-const PrivateRoute = ({ element }) => {
-  return isAuthenticated() ? element : <Navigate to="/login" />;
+const PrivateRoute = ({ children }) => {
+  return isAuthenticated() ? children : <Navigate to="/login" />;
 };
 
 function App() {
   return (
     <Routes>
+      {/* Public routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
 
-      {/* Protected routes with DashboardLayout */}
-      <Route path="/" element={<PrivateRoute element={<DashboardLayout />} />}>
+      {/* Protected routes inside DashboardLayout */}
+      <Route
+        path="/"
+        element={
+          <PrivateRoute>
+            <DashboardLayout />
+          </PrivateRoute>
+        }
+      >
         <Route index element={<Home />} />
         <Route path="createstore" element={<CreateStore />} />
         <Route path="sellercenter" element={<SellerCenter />} />

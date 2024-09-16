@@ -19,6 +19,8 @@ export const login = async (userData) => {
         const response = await axios.post(`${API_URL}/login`, userData);
         console.log("first",response)
         // Save JWT token to localStorage
+        console.log(response.data.user.firstName)
+        localStorage.setItem("username",response.data.user.firstName)
         if (response.data.token) {
             console.log(response.data.token)
             localStorage.setItem('token', response.data.token);

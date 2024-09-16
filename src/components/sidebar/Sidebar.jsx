@@ -27,7 +27,7 @@ const Sidebar = () => {
           <ul className="space-y-4">
             <li>
               <Link
-                to="/home"
+                to="/"
                 onClick={handleLinkClick}
                 className="flex items-center space-x-2 text-gray-800 hover:text-blue-500"
               >
@@ -88,7 +88,7 @@ const Sidebar = () => {
           <ul className="space-y-4">
             <li>
               <Link
-                to="/home"
+                to="/"
                 onClick={handleLinkClick}
                 className="flex items-center space-x-2 text-gray-800 hover:text-blue-500"
               >

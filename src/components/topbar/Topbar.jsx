@@ -2,21 +2,33 @@ import React, { useState } from "react";
 import logo from "../../assets/logo/Mianlogo.svg";
 import Navmodal from "../../modal/Navmodal";
 import { IoIosArrowDown, IoMdMenu } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 const Topbar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const navigate = useNavigate();
   // Toggle modal visibility
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
+  };
+
+  const handleLogout = () => {
+    // Remove token from localStorage or sessionStorage
+    localStorage.removeItem("token"); // or sessionStorage.removeItem("authToken");
+
+    // Optionally clear other user-related data if necessary
+    // localStorage.clear(); or sessionStorage.clear();
+
+    // Redirect user to login page
+    navigate("/login");
   };
 
   // Toggle menu visibility
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-
+  let username = localStorage.getItem("username");
   return (
     <header className="w-full py-4 px-4 md:px-6 bg-gray-50 shadow-md shadow-black/5 z-10">
       <div className="flex items-center justify-between">
@@ -38,7 +50,7 @@ const Topbar = () => {
               src="https://imgv3.fotor.com/images/slider-image/A-clear-close-up-photo-of-a-woman.jpg"
               alt="Profile"
             />
-            <span className="text-gray-800">Roman</span>
+            <span className="text-gray-800">{username}</span>
 
             <IoIosArrowDown onClick={toggleModal} className="cursor-pointer" />
 
@@ -52,7 +64,7 @@ const Topbar = () => {
                     Settings
                   </button>
                   <button
-                    onClick={() => alert("Logout clicked")}
+                    onClick={handleLogout}
                     className="text-gray-800 hover:text-blue-500"
                   >
                     Logout
@@ -75,7 +87,7 @@ const Topbar = () => {
               src="https://imgv3.fotor.com/images/slider-image/A-clear-close-up-photo-of-a-woman.jpg"
               alt="Profile"
             />
-            <span className="text-gray-800">Roman</span>
+            <span className="text-gray-800">{username}</span>
 
             <IoIosArrowDown onClick={toggleModal} className="cursor-pointer" />
 
@@ -89,7 +101,7 @@ const Topbar = () => {
                     Settings
                   </button>
                   <button
-                    onClick={() => alert("Logout clicked")}
+                    onClick={handleLogout}
                     className="text-gray-800 hover:text-blue-500"
                   >
                     Logout
