@@ -1,40 +1,53 @@
-import axios from 'axios';
+import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-
-// Register user
-export const register = async (userData) => {
+class UserService {
+  // Login a user
+  static async login(userData) {
     try {
-        const response = await axios.post(`${API_URL}/register`, userData);
-        return response.data;
-    } catch (error) {
-        throw error.response.data;
-    }
-};
+      const response = await axios.post(`${API_URL}/users/login`, userData);
+      console.log("response data: ", response.data);
 
-// Login user
-export const login = async (userData) => {
+      // Save JWT token and user data (including role) to localStorage
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+      }
+      if (response.data.user) {
+        localStorage.setItem("user", JSON.stringify(response.data.user)); // Store user data
+      }
+
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  }
+
+  // Logout user by clearing token and user data
+  static logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+  }
+
+  // Get the JWT token from localStorage
+  static getToken() {
+    return localStorage.getItem("token");
+  }
+
+  // Fetch user by ID
+  static async getUserById(userId) {
     try {
-        const response = await axios.post(`${API_URL}/login`, userData);
-        console.log("first",response)
-        // Save JWT token to localStorage
-        if (response.data.token) {
-            console.log(response.data.token)
-            localStorage.setItem('token', response.data.token);
-        }
-        return response.data;
+      const token = this.getToken();
+      const response = await axios.get(`${API_URL}/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
     } catch (error) {
-        throw error.response.data;
+      throw error.response?.data || error.message;
     }
-};
+  }
+}
 
-// Logout user
-export const logout = () => {
-    localStorage.removeItem('token');
-};
-
-// Get JWT token from localStorage
-export const getToken = () => {
-    return localStorage.getItem('token');
-};
+export default UserService;
